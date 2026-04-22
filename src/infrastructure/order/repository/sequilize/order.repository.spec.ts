@@ -157,4 +157,57 @@ describe("Order repository test", () => {
     expect(foundOrders).toEqual([order1, order2]);
   });
 
+  it('should update an order', async () => {
+    const customerRepository = new CustomerRepository();
+    const customer = new Customer("123", "Customer 1");
+    const address = new Address("Street 1", 1, "Zipcode 1", "City 1");
+    customer.changeAddress(address);
+    await customerRepository.create(customer);
+
+    const productRepository = new ProductRepository();
+    const product = new Product("123", "Product 1", 10);
+    await productRepository.create(product);
+
+    const orderItem = new OrderItem(
+      "1",
+      product.name,
+      product.price,
+      product.id,
+      2
+    );
+
+    const order = new Order("123", "123", [orderItem]);
+
+    const orderRepository = new OrderRepository();
+    await orderRepository.create(order);
+
+    const orderFound = await orderRepository.find(order.id);
+
+    expect(orderFound).toEqual(order);
+
+    const newOrderItem = new OrderItem("2", product.name, product.price * 0.9, product.id, 3);
+
+    order.changeItems([newOrderItem]);
+
+    await orderRepository.update(order);
+
+    expect(await OrderItemModel.findOne({ where: { id: orderItem.id } })).toBeNull();
+
+    const updatedOrderModel = await OrderModel.findOne({ where: { id: order.id }, include: ['items'] });
+    expect(updatedOrderModel.toJSON()).toStrictEqual({
+      id: "123",
+      customer_id: "123",
+      total: order.total(),
+      items: [
+        {
+          id: newOrderItem.id,
+          name: newOrderItem.name,
+          price: newOrderItem.price,
+          quantity: newOrderItem.quantity,
+          order_id: "123",
+          product_id: "123",
+        },
+      ],
+    });
+  });
 });

@@ -1,3 +1,4 @@
+import { Transaction } from "sequelize";
 import Order from "../../../../domain/checkout/entity/order";
 import OrderItem from "../../../../domain/checkout/entity/order_item";
 import OrderRepositoryInterface from "../../../../domain/checkout/repository/order-repository.interface";
@@ -6,7 +7,47 @@ import OrderModel from "./order.model";
 
 export default class OrderRepository implements OrderRepositoryInterface {
   async update(entity: Order): Promise<void> {
-    throw new Error("Method not implemented.");
+    const orderFound = await this.find(entity.id);
+    const sequelize = OrderModel.sequelize;
+    let transaction: Transaction;
+    try {
+      transaction = await sequelize.transaction();
+      try {
+        await OrderItemModel.destroy({
+          where: { order_id: orderFound.id },
+          transaction,
+        });
+        await OrderItemModel.bulkCreate(entity.items.map((item) => ({
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          product_id: item.productId,
+          quantity: item.quantity,
+          order_id: orderFound.id,
+        })), {
+          transaction
+        });
+        await OrderModel.update({
+          customer_id: entity.customerId,
+          items: entity.items.map((item) => ({
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            product_id: item.productId,
+            quantity: item.quantity,
+          })),
+          total: entity.total(),
+        }, {
+          where: { id: orderFound.id },
+          transaction
+        });
+        await transaction.commit();
+      } catch (error) {
+        await transaction.rollback();
+      }
+    } catch (error) {
+      throw new Error("Error on update order transaction.");
+    }
   }
   async find(id: string): Promise<Order> {
     const orderModel = await OrderModel.findOne({ where: { id }, include: ['items'] });
