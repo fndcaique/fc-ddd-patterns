@@ -8,9 +8,9 @@ import CustomerModel from "../../../customer/repository/sequelize/customer.model
 import CustomerRepository from "../../../customer/repository/sequelize/customer.repository";
 import ProductModel from "../../../product/repository/sequelize/product.model";
 import ProductRepository from "../../../product/repository/sequelize/product.repository";
-import OrderItemModel from "./order-item.model";
 import OrderModel from "./order.model";
 import OrderRepository from "./order.repository";
+import OrderItemModel from "./order-item.model";
 
 describe("Order repository test", () => {
   let sequelize: Sequelize;
@@ -82,12 +82,14 @@ describe("Order repository test", () => {
     });
   });
 
-  it('should throw error when order not found', async () => {
+  it("should throw error when order not found", async () => {
     const orderRepository = new OrderRepository();
-    await expect(orderRepository.find('notfoundid')).rejects.toThrow('Order not found');
+    await expect(orderRepository.find("notfoundid")).rejects.toThrow(
+      "Order not found"
+    );
   });
 
-  it('should find an order by id', async () => {
+  it("should find an order by id", async () => {
     const customerRepository = new CustomerRepository();
     const customer = new Customer("123", "Customer 1");
     const address = new Address("Street 1", 1, "Zipcode 1", "City 1");
@@ -116,7 +118,7 @@ describe("Order repository test", () => {
     expect(foundOrder).toEqual(order);
   });
 
-  it('should find all orders', async () => {
+  it("should find all orders", async () => {
     const orderRepository = new OrderRepository();
     expect(await orderRepository.findAll()).toEqual([]);
 
@@ -157,7 +159,7 @@ describe("Order repository test", () => {
     expect(foundOrders).toEqual([order1, order2]);
   });
 
-  it('should update an order', async () => {
+  it("should update an order", async () => {
     const customerRepository = new CustomerRepository();
     const customer = new Customer("123", "Customer 1");
     const address = new Address("Street 1", 1, "Zipcode 1", "City 1");
@@ -185,15 +187,26 @@ describe("Order repository test", () => {
 
     expect(orderFound).toEqual(order);
 
-    const newOrderItem = new OrderItem("2", product.name, product.price * 0.9, product.id, 3);
+    const newOrderItem = new OrderItem(
+      "2",
+      product.name,
+      product.price * 0.9,
+      product.id,
+      3
+    );
 
     order.changeItems([newOrderItem]);
 
     await orderRepository.update(order);
 
-    expect(await OrderItemModel.findOne({ where: { id: orderItem.id } })).toBeNull();
+    expect(
+      await OrderItemModel.findOne({ where: { id: orderItem.id } })
+    ).toBeNull();
 
-    const updatedOrderModel = await OrderModel.findOne({ where: { id: order.id }, include: ['items'] });
+    const updatedOrderModel = await OrderModel.findOne({
+      where: { id: order.id },
+      include: ["items"],
+    });
     expect(updatedOrderModel.toJSON()).toStrictEqual({
       id: "123",
       customer_id: "123",

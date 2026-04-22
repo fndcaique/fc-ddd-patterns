@@ -12,7 +12,9 @@
   },
   "scripts": {
     "test": "npm run tsc -- --noEmit && jest",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "lint": "biome check src/",
+    "lint:fix": "biome check --write src/"
   },
   "dependencies": {
     "reflect-metadata": "^0.1.13",
