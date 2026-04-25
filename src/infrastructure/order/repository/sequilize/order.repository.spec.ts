@@ -23,7 +23,7 @@ describe("Order repository test", () => {
       sync: { force: true },
     });
 
-    await sequelize.addModels([
+    sequelize.addModels([
       CustomerModel,
       OrderModel,
       OrderItemModel,
@@ -38,9 +38,8 @@ describe("Order repository test", () => {
 
   it("should create a new order", async () => {
     const customerRepository = new CustomerRepository();
-    const customer = new Customer("123", "Customer 1");
     const address = new Address("Street 1", 1, "Zipcode 1", "City 1");
-    customer.changeAddress(address);
+    const customer = new Customer("123", "Customer 1", address);
     await customerRepository.create(customer);
 
     const productRepository = new ProductRepository();
@@ -52,7 +51,7 @@ describe("Order repository test", () => {
       product.name,
       product.price,
       product.id,
-      2
+      2,
     );
 
     const order = new Order("123", "123", [orderItem]);
@@ -85,15 +84,14 @@ describe("Order repository test", () => {
   it("should throw error when order not found", async () => {
     const orderRepository = new OrderRepository();
     await expect(orderRepository.find("notfoundid")).rejects.toThrow(
-      "Order not found"
+      "Order not found",
     );
   });
 
   it("should find an order by id", async () => {
     const customerRepository = new CustomerRepository();
-    const customer = new Customer("123", "Customer 1");
     const address = new Address("Street 1", 1, "Zipcode 1", "City 1");
-    customer.changeAddress(address);
+    const customer = new Customer("123", "Customer 1", address);
     await customerRepository.create(customer);
 
     const productRepository = new ProductRepository();
@@ -105,7 +103,7 @@ describe("Order repository test", () => {
       product.name,
       product.price,
       product.id,
-      2
+      2,
     );
 
     const order = new Order("123", "123", [orderItem]);
@@ -123,9 +121,8 @@ describe("Order repository test", () => {
     expect(await orderRepository.findAll()).toEqual([]);
 
     const customerRepository = new CustomerRepository();
-    const customer = new Customer("123", "Customer 1");
     const address = new Address("Street 1", 1, "Zipcode 1", "City 1");
-    customer.changeAddress(address);
+    const customer = new Customer("123", "Customer 1", address);
     await customerRepository.create(customer);
 
     const productRepository = new ProductRepository();
@@ -137,7 +134,7 @@ describe("Order repository test", () => {
       product.name,
       product.price,
       product.id,
-      2
+      2,
     );
 
     const orderItem2 = new OrderItem(
@@ -145,7 +142,7 @@ describe("Order repository test", () => {
       product.name,
       product.price,
       product.id,
-      2
+      2,
     );
 
     const order1 = new Order("123", "123", [orderItem1]);
@@ -161,9 +158,8 @@ describe("Order repository test", () => {
 
   it("should update an order", async () => {
     const customerRepository = new CustomerRepository();
-    const customer = new Customer("123", "Customer 1");
     const address = new Address("Street 1", 1, "Zipcode 1", "City 1");
-    customer.changeAddress(address);
+    const customer = new Customer("123", "Customer 1", address);
     await customerRepository.create(customer);
 
     const productRepository = new ProductRepository();
@@ -175,7 +171,7 @@ describe("Order repository test", () => {
       product.name,
       product.price,
       product.id,
-      2
+      2,
     );
 
     const order = new Order("123", "123", [orderItem]);
@@ -192,7 +188,7 @@ describe("Order repository test", () => {
       product.name,
       product.price * 0.9,
       product.id,
-      3
+      3,
     );
 
     order.changeItems([newOrderItem]);
@@ -200,7 +196,7 @@ describe("Order repository test", () => {
     await orderRepository.update(order);
 
     expect(
-      await OrderItemModel.findOne({ where: { id: orderItem.id } })
+      await OrderItemModel.findOne({ where: { id: orderItem.id } }),
     ).toBeNull();
 
     const updatedOrderModel = await OrderModel.findOne({

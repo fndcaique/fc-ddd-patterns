@@ -18,7 +18,7 @@ describe("Product repository test", () => {
   });
 
   afterEach(async () => {
-    await sequileze.close();
+    await sequileze?.close();
   });
 
   it("should create a product", async () => {
