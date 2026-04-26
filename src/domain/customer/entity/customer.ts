@@ -1,16 +1,29 @@
+import { AgreggateRoot } from "../../@shared/domain/aggregate-root";
+import CustomerAddressChangedEvent from "../event/customer-address-changed.event";
+import CustomerCreatedEvent from "../event/customer-created.event";
 import Address from "../value-object/address";
 
-export default class Customer {
+export default class Customer extends AgreggateRoot {
   private _id: string;
   private _name: string = "";
   private _address!: Address;
   private _active: boolean = false;
   private _rewardPoints: number = 0;
 
-  constructor(id: string, name: string) {
+  constructor(id: string, name: string, address?: Address) {
+    super();
     this._id = id;
     this._name = name;
+    this._address = address;
     this.validate();
+  }
+
+  static create(id: string, name: string, address?: Address): Customer {
+    const customer = new Customer(id, name, address);
+    const eventData = { id: customer.id, name: customer.name };
+    const customerCreatedEvent = new CustomerCreatedEvent(eventData);
+    customer.addEvent(customerCreatedEvent);
+    return customer;
   }
 
   get id(): string {
@@ -39,12 +52,18 @@ export default class Customer {
     this.validate();
   }
 
-  get Address(): Address {
+  get address(): Address {
     return this._address;
   }
 
   changeAddress(address: Address) {
     this._address = address;
+    const event = new CustomerAddressChangedEvent({
+      id: this.id,
+      name: this.name,
+      address: this.address,
+    });
+    this.addEvent(event);
   }
 
   isActive(): boolean {
@@ -66,7 +85,7 @@ export default class Customer {
     this._rewardPoints += points;
   }
 
-  set Address(address: Address) {
+  set address(address: Address) {
     this._address = address;
   }
 }
