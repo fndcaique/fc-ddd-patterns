@@ -39,7 +39,7 @@ describe("Mediator", () => {
 
   it("should clear events after publishing", async () => {
     const mediator = new Mediator();
-    
+
     const dumbAggregateRoot = new DumbAggregateRoot();
     dumbAggregateRoot.doSomething();
 

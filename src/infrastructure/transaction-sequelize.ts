@@ -7,8 +7,8 @@ export class TransactionSequelize implements TransactionInterface {
 
   constructor(
     private context: { get: (name: string) => Promise<any> },
-    private sequelize: Sequelize,
-  ) { }
+    private sequelize: Sequelize
+  ) {}
 
   async start(): Promise<void> {
     if (!this.queryRunner) {
@@ -29,7 +29,7 @@ export class TransactionSequelize implements TransactionInterface {
   }
 
   async do<T>(
-    workFn: (transaction: TransactionInterface) => Promise<T>,
+    workFn: (transaction: TransactionInterface) => Promise<T>
   ): Promise<T> {
     try {
       if (this.queryRunner) {

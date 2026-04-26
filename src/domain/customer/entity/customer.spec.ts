@@ -84,14 +84,13 @@ describe("Customer unit tests", () => {
     jest.useRealTimers();
   });
 
-
   it("should change the address", () => {
     jest.useFakeTimers();
     const eventDate = new Date();
     jest.setSystemTime(eventDate);
     const address = new Address("Street 1", 123, "13330-250", "São Paulo");
     const customer = new Customer("1", "Customer 1", address);
-    
+
     customer.changeAddress(new Address("Street 2", 456, "19590-000", "Taciba"));
 
     expect(customer.address.street).toBe("Street 2");
@@ -102,7 +101,11 @@ describe("Customer unit tests", () => {
     const event = customer.events.values().next().value;
     expect(event.constructor.name).toBe(CustomerAddressChangedEvent.name);
     expect(event.dateTimeOccurred).toEqual(eventDate);
-    expect(event.eventData).toEqual({ id: "1", name: "Customer 1", address: customer.address });
+    expect(event.eventData).toEqual({
+      id: "1",
+      name: "Customer 1",
+      address: customer.address,
+    });
     customer.clearEvents();
     expect(customer.events.size).toBe(0);
     jest.useRealTimers();

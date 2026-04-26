@@ -9,11 +9,21 @@ export class CustomerService {
   constructor(
     private customerRepo: CustomerRepository,
     private mediator: Mediator,
-    private transaction: TransactionInterface,
+    private transaction: TransactionInterface
   ) {}
 
-  async create(name: string, street: string, number: number, zip: string, city: string): Promise<Customer> {
-    const customer = Customer.create(uuid(), name, new address(street, number, zip, city));
+  async create(
+    name: string,
+    street: string,
+    number: number,
+    zip: string,
+    city: string
+  ): Promise<Customer> {
+    const customer = Customer.create(
+      uuid(),
+      name,
+      new address(street, number, zip, city)
+    );
     await this.transaction.do(async (transaction) => {
       this.customerRepo.setTransaction(transaction);
       await this.customerRepo.create(customer);
@@ -22,7 +32,13 @@ export class CustomerService {
     return customer;
   }
 
-  async changeAddress(customerId: string, street: string, number: number, zip: string, city: string): Promise<void> {
+  async changeAddress(
+    customerId: string,
+    street: string,
+    number: number,
+    zip: string,
+    city: string
+  ): Promise<void> {
     const customer = await this.customerRepo.find(customerId);
     if (!customer) {
       throw new Error("Cliente não encontrado");

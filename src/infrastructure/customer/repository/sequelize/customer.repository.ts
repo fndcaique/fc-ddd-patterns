@@ -23,7 +23,7 @@ export default class CustomerRepository implements CustomerRepositoryInterface {
         active: entity.isActive(),
         rewardPoints: entity.rewardPoints,
       },
-      { transaction: this.transaction?.getTransaction() },
+      { transaction: this.transaction?.getTransaction() }
     );
   }
 
@@ -43,7 +43,7 @@ export default class CustomerRepository implements CustomerRepositoryInterface {
           id: entity.id,
         },
         transaction: this.transaction?.getTransaction(),
-      },
+      }
     );
   }
 
@@ -61,12 +61,16 @@ export default class CustomerRepository implements CustomerRepositoryInterface {
       throw new Error("Customer not found");
     }
 
-    const customer = new Customer(id, customerModel.name, new Address(
-      customerModel.street,
-      customerModel.number,
-      customerModel.zipcode,
-      customerModel.city,
-    ));
+    const customer = new Customer(
+      id,
+      customerModel.name,
+      new Address(
+        customerModel.street,
+        customerModel.number,
+        customerModel.zipcode,
+        customerModel.city
+      )
+    );
     return customer;
   }
 
@@ -76,16 +80,20 @@ export default class CustomerRepository implements CustomerRepositoryInterface {
     });
 
     const customers = customerModels.map((customerModels) => {
-      const customer = new Customer(customerModels.id, customerModels.name, new Address(
-        customerModels.street,
-        customerModels.number,
-        customerModels.zipcode,
-        customerModels.city,
-      ));
+      const customer = new Customer(
+        customerModels.id,
+        customerModels.name,
+        new Address(
+          customerModels.street,
+          customerModels.number,
+          customerModels.zipcode,
+          customerModels.city
+        )
+      );
       if (customerModels.active) {
         customer.activate();
       }
-      if(customerModels.rewardPoints > 0){
+      if (customerModels.rewardPoints > 0) {
         customer.addRewardPoints(customerModels.rewardPoints);
       }
       return customer;

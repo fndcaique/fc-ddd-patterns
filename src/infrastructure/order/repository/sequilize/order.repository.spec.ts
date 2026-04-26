@@ -51,7 +51,7 @@ describe("Order repository test", () => {
       product.name,
       product.price,
       product.id,
-      2,
+      2
     );
 
     const order = new Order("123", "123", [orderItem]);
@@ -84,7 +84,7 @@ describe("Order repository test", () => {
   it("should throw error when order not found", async () => {
     const orderRepository = new OrderRepository();
     await expect(orderRepository.find("notfoundid")).rejects.toThrow(
-      "Order not found",
+      "Order not found"
     );
   });
 
@@ -103,7 +103,7 @@ describe("Order repository test", () => {
       product.name,
       product.price,
       product.id,
-      2,
+      2
     );
 
     const order = new Order("123", "123", [orderItem]);
@@ -134,7 +134,7 @@ describe("Order repository test", () => {
       product.name,
       product.price,
       product.id,
-      2,
+      2
     );
 
     const orderItem2 = new OrderItem(
@@ -142,7 +142,7 @@ describe("Order repository test", () => {
       product.name,
       product.price,
       product.id,
-      2,
+      2
     );
 
     const order1 = new Order("123", "123", [orderItem1]);
@@ -171,7 +171,7 @@ describe("Order repository test", () => {
       product.name,
       product.price,
       product.id,
-      2,
+      2
     );
 
     const order = new Order("123", "123", [orderItem]);
@@ -188,7 +188,7 @@ describe("Order repository test", () => {
       product.name,
       product.price * 0.9,
       product.id,
-      3,
+      3
     );
 
     order.changeItems([newOrderItem]);
@@ -196,7 +196,7 @@ describe("Order repository test", () => {
     await orderRepository.update(order);
 
     expect(
-      await OrderItemModel.findOne({ where: { id: orderItem.id } }),
+      await OrderItemModel.findOne({ where: { id: orderItem.id } })
     ).toBeNull();
 
     const updatedOrderModel = await OrderModel.findOne({
