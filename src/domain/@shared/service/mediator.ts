@@ -4,6 +4,10 @@ import { AgreggateRoot } from "../domain/aggregate-root";
 export class Mediator {
   eventEmitter: EventEmitter;
 
+  constructor() {
+    this.eventEmitter = new EventEmitter();
+  }
+
   register(eventName: string, listener: any) {
     this.eventEmitter.on(eventName, listener);
   }

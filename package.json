@@ -14,7 +14,8 @@
     "test": "npm run tsc -- --noEmit && jest",
     "tsc": "tsc",
     "lint": "biome check src/",
-    "lint:fix": "biome check --write src/"
+    "lint:fix": "biome check --write src/",
+    "dev": "ts-node src/index.ts"
   },
   "dependencies": {
     "eventemitter2": "6.4.9",
