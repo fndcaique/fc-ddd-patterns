@@ -21,4 +21,17 @@ export class CustomerService {
     await this.mediator.publish(customer);
     return customer;
   }
+
+  async changeAddress(customerId: string, street: string, number: number, zip: string, city: string): Promise<void> {
+    const customer = await this.customerRepo.find(customerId);
+    if (!customer) {
+      throw new Error("Cliente não encontrado");
+    }
+    customer.changeAddress(new address(street, number, zip, city));
+    await this.transaction.do(async (transaction) => {
+      this.customerRepo.setTransaction(transaction);
+      await this.customerRepo.update(customer);
+    });
+    await this.mediator.publish(customer);
+  }
 }

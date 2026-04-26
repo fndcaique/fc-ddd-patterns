@@ -8,6 +8,8 @@ import CustomerRepository from "./infrastructure/customer/repository/sequelize/c
 import CustomerModel from "./infrastructure/customer/repository/sequelize/customer.model";
 import { TransactionSequelize } from "./infrastructure/transaction-sequelize";
 import Customer from "./domain/customer/entity/customer";
+import CustomerAddressChangedEvent from "./domain/customer/event/customer-address-changed.event";
+import SendConsoleLogWhenAddressIsChangedHandler from "./domain/customer/event/handler/send-console-log-when-address-is-changed.handler";
 
 const execution = async () => {
   const mediator = new Mediator();
@@ -16,9 +18,11 @@ const execution = async () => {
     new SendConsoleLog1WhenCustomerIsCreatedHandler();
   const sendConsoleLog2Handler =
     new SendConsoleLog2WhenCustomerIsCreatedHandler();
+  const sendConsoleLogWhenAddressIsChangedHandler = new SendConsoleLogWhenAddressIsChangedHandler();
 
   mediator.register(CustomerCreatedEvent.name, sendConsoleLog1Handler.handle);
   mediator.register(CustomerCreatedEvent.name, sendConsoleLog2Handler.handle);
+  mediator.register(CustomerAddressChangedEvent.name, sendConsoleLogWhenAddressIsChangedHandler.handle);
 
   const sequelize = new Sequelize({
     dialect: "sqlite",
@@ -40,7 +44,9 @@ const execution = async () => {
 
   const customerService = new CustomerService(customerRepository, mediator, transaction);
 
-  await customerService.create("Fernando", "Street", 1, "13330-250", "São Paulo");
+  const customer = await customerService.create("Fernando", "Street", 1, "13330-250", "São Paulo");
+
+  await customerService.changeAddress(customer.id, "New Street", 123, "19590-000", "Taciba");
 
   await sequelize.close();
 };
