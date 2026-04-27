@@ -5,8 +5,11 @@ Este repositório contém implementações de padrões do Domain-Driven Design (
 ## Pré-requisitos
 
 Certifique-se de ter instalado em sua máquina:
-- **Node.js** (neste projeto utilizei a versão 22.21.1 como pode ser visto no arquivo .nvmrc)
+
+- **Node.js 20.x LTS** (versão utilizada e validada neste projeto)
 - **NPM** (geralmente instalado junto com o Node)
+
+> A versão recomendada está definida no arquivo `.nvmrc`.
 
 ## Como instalar as dependências
 
@@ -28,11 +31,21 @@ npm test
 
 Esse comando irá primeiro verificar a tipagem do TypeScript (`tsc --noEmit`) e logo em seguida executar todos os testes contidos nos arquivos `.spec.ts` através do Jest.
 
+## Execução com Docker (Recomendado)
+
+Para garantir compatibilidade total de ambiente e evitar problemas com dependências nativas como `sqlite3`, o projeto também pode ser executado via Docker:
+
+```bash
+npm run test:docker
+```
+
 ## Linter/Formatador
 
 Este projeto utiliza o **Biome** para análise e formatação do código.
+
 - Para verificar problemas no código, rode: `npm run lint`
 - Para formatar o código e aplicar correções seguras, rode: `npm run lint:fix`
 
 ---
-*Projeto baseado no módulo de DDD e Arquitetura do curso Full Cycle.*
+
+_Projeto baseado no módulo de DDD e Arquitetura do curso Full Cycle._

@@ -1,0 +1,5 @@
+services:
+  tests:
+    build: .
+    container_name: fc-ddd-patterns
+    command: npm test

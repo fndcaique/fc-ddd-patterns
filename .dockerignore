@@ -1,0 +1,12 @@
+node_modules
+dist
+coverage
+.git
+.github
+.gitignore
+Dockerfile
+compose.yaml
+README.md
+.nvmrc
+.env
+.env.*
