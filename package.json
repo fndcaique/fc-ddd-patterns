@@ -4,14 +4,15 @@
     "@swc/cli": "0.1.65",
     "@swc/core": "1.15.30",
     "@swc/jest": "0.2.39",
-    "@types/jest": "^27.4.1",
+    "@types/jest": "27.4.1",
     "@types/uuid": "8.3.4",
-    "jest": "^27.5.1",
+    "jest": "27.5.1",
     "ts-node": "10.9.2",
     "typescript": "6.0.3"
   },
   "scripts": {
     "test": "npm run tsc -- --noEmit && jest",
+    "test:docker": "docker compose up --build",
     "tsc": "tsc",
     "lint": "biome check src/",
     "lint:fix": "biome check --write src/",
@@ -22,7 +23,7 @@
     "reflect-metadata": "0.1.14",
     "sequelize": "6.37.8",
     "sequelize-typescript": "2.1.6",
-    "sqlite3": "6.0.1",
+    "sqlite3": "5.1.7",
     "uuid": "8.3.2"
   }
 }
